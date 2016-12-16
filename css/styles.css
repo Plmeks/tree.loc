@@ -1,0 +1,64 @@
+ul {
+    list-style: none;
+    margin:0 !important;
+}
+.glyphicon {
+  cursor: pointer;
+}
+li:before {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 0;
+    border-top: 1px solid rgb(221, 221, 221);
+    //margin-top: -1px;
+    position: absolute;
+    top: 20px;
+    left: 0;
+}
+li {
+    background-color: transparent !important;
+    margin-left: 10px;
+    //padding-bottom: 20px !important;
+    //margin-bottom: 5px !important;
+    //margin: 20px;
+    //padding-top: 20px;
+    border: none !important;
+    border-left: 1px solid rgb(221, 221, 221) !important;
+    /*
+    
+    border-bottom: 1px solid rgb(221, 221, 221) !important;*/
+    border-radius: 0 !important;
+}
+
+.title {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.treeControl.first {
+  padding-left: 10px;  
+}
+.treeControl {
+  padding-left: 3px;
+}
+
+.jumbotron {
+  min-height: 330px;
+  background-color: #337ab7;
+  color: white;
+}
+
+input {
+  color: black;
+}
+
+.glyphicon-trash {
+  color: #ca5553;
+}
+
+.glyphicon-plus {
+  color: #5caf5d;
+}
+
+
+
