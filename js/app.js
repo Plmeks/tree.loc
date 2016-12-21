@@ -1,11 +1,20 @@
-angular.module("Application", []).
-controller("TreeController", ['$scope', '$compile', function($scope, $compile) {
+var app = angular.module("Application", []);
+app.controller("TreeController", ['$scope', '$compile', 'storageService', 'treeModel', function($scope, $compile, storageService, treeModel) {
     $scope.delete = function(data) {
         //data.nodes = [];
         console.log($scope.search(data.$$hashKey, $scope.tree[0]));
     };
-    
+	$scope.test = "test";
+	
+	$scope.treeModel = treeModel;
+	$scope.storageService = storageService;
+	
     $scope.showButton = true;
+	
+	$scope.saveTree = function() {
+		storageService.saveTree();
+	};
+	$scope.getTree = function() {};
     
     $scope.search = function(hash, currentNode, key) {
     	var currentChild, 
@@ -28,19 +37,16 @@ controller("TreeController", ['$scope', '$compile', function($scope, $compile) {
       }
     };
     
-    $scope.saveTree = function() {
+    /*$scope.saveTree = function() {
     	var tree = JSON.stringify($scope.tree);
     	localStorage.setItem('tree', tree);
     };
     
     $scope.getTree = function() {
-    	$scope.tree = JSON.parse(localStorage.getItem('tree'));
-      $scope.startButton = true;
-    }
-    
-    $scope.deleteTree = function() {
-    	localStorage.setItem('tree', {});
-    }
+		$scope.tree = JSON.parse(localStorage.getItem('tree'));
+		$scope.startButton = true;
+    }*/
+
     
     $scope.add = function(data) {
         var post = data.nodes.length + 1;
@@ -49,7 +55,7 @@ controller("TreeController", ['$scope', '$compile', function($scope, $compile) {
     };
     
     $scope.isRestorable = function() {
-    	if(localStorage.getItem('tree'))
+    if(localStorage.getItem('tree'))
       	return true;
       else
         return false;
@@ -60,11 +66,12 @@ controller("TreeController", ['$scope', '$compile', function($scope, $compile) {
     };
     
     $scope.startTree = function() {
-    	$scope.tree = [{name: "Tree", nodes: []}];
+    	$scope.tree = treeModel.getTree();
     };
+	
     $scope.tree = [];
-}])
-.directive('autoFocus', function($timeout) {
+}]);
+app.directive('autoFocus', function($timeout) {
   return function(scope, element, attrs) {
     scope.$watch(attrs.autoFocus, 
       function (newValue) { 
@@ -74,3 +81,25 @@ controller("TreeController", ['$scope', '$compile', function($scope, $compile) {
       },true);
   };    
 });
+
+/*describe('Application', function () {
+    var scope,
+    controller;
+    beforeEach(function () {
+			angular.mock.module('Application');
+    });
+
+    describe('TreeController', function () {
+        beforeEach(inject(function ($rootScope, $controller) {
+            scope = $rootScope.$new();
+            controller = $controller('TreeController', {
+                '$scope': scope
+            });
+        }));
+        it('sets the name', function () {
+            expect(scope.test).toBe('test');
+        });
+
+    });
+    
+});*/
