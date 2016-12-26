@@ -1,22 +1,19 @@
 var app = angular.module("Application", []);
-app.controller("TreeController", ['$scope', '$compile', 'storageService', 'treeModel', function($scope, $compile, storageService, treeModel) {
+app.controller("TreeController", ['$scope', '$compile', 'storageService', 'treeModel', 'testingService', function($scope, $compile, storageService, treeModel, testingService) {
     $scope.delete = function(data) {
         //data.nodes = [];
-        console.log($scope.search(data.$$hashKey, $scope.tree[0]));
+        $scope.remove(data.$$hashKey, $scope.tree[0]);
     };
 	$scope.test = "test";
 	
 	$scope.treeModel = treeModel;
 	$scope.storageService = storageService;
-	
+    $scope.testingService = testingService;
+
     $scope.showButton = true;
-	
-	$scope.saveTree = function() {
-		storageService.saveTree();
-	};
-	$scope.getTree = function() {};
-    
-    $scope.search = function(hash, currentNode, key) {
+
+
+    $scope.remove = function(hash, currentNode, key) {
     	var currentChild, 
       	result,
         i;
@@ -27,26 +24,14 @@ app.controller("TreeController", ['$scope', '$compile', 'storageService', 'treeM
       } else {
       	for(i = 0; i < currentNode.nodes.length; i++) {  
         	currentChild = currentNode.nodes[i];
-          result = $scope.search(hash, currentChild, i);
+          result = $scope.remove(hash, currentChild, i);
           if(result !== false) {
-          	console.log(currentChild);
           	currentNode.nodes.splice(result, 1);
           }
       	}
         return false;
       }
     };
-    
-    /*$scope.saveTree = function() {
-    	var tree = JSON.stringify($scope.tree);
-    	localStorage.setItem('tree', tree);
-    };
-    
-    $scope.getTree = function() {
-		$scope.tree = JSON.parse(localStorage.getItem('tree'));
-		$scope.startButton = true;
-    }*/
-
     
     $scope.add = function(data) {
         var post = data.nodes.length + 1;
@@ -70,6 +55,85 @@ app.controller("TreeController", ['$scope', '$compile', 'storageService', 'treeM
     };
 	
     $scope.tree = [];
+
+    $scope.tests = function() {
+        $scope.testAddedNodeLength();
+        $scope.testAddedNodeName();
+        $scope.testRemovingNode();
+        $scope.testSavingTree();
+    };
+
+    $scope.testAddedNodeLength = function() {
+        var tree = {
+            name: "Tree",
+            nodes: [{
+                name: "Tree-1",
+                nodes: []
+            }, {
+                name: "Tree-2",
+                nodes: []
+            }]
+        };
+        var oldLength = tree.nodes.length;
+        var expectedLength = oldLength + 1;
+
+        $scope.add(tree);
+
+        $scope.testingService.test("Added node length test", tree.nodes.length, expectedLength);
+    };
+
+    $scope.testRemovingNode = function() {
+        var tree = {
+            $$hashKey: "00",
+            name: "Tree",
+            nodes: [{
+                $$hashKey: "01",
+                name: "Tree-1",
+                nodes: []
+            }, {
+                $$hashKey: "02",
+                name: "Tree-2",
+                nodes: []
+            }]
+        };
+        var oldLength = tree.nodes.length;
+        var expectedLength = oldLength - 1;
+
+        $scope.remove(tree.nodes[0].$$hashKey, tree);
+
+        $scope.testingService.test("Removing node length test", tree.nodes.length, expectedLength);
+    };
+
+    $scope.testAddedNodeName = function() {
+        var tree = {
+            name: "Tree",
+            nodes: []
+        };
+
+        $scope.add(tree);
+
+        $scope.testingService.test("Added node name test", tree.nodes[0].name, "Tree-1");
+    };
+
+    $scope.testSavingTree = function() {
+        var tree = {
+            $$hashKey: "00",
+            name: "Tree",
+            nodes: [{
+                $$hashKey: "01",
+                name: "Tree-1",
+                nodes: []
+            }, {
+                $$hashKey: "02",
+                name: "Tree-2",
+                nodes: []
+            }]
+        };
+        $scope.storageService.saveTree(tree);
+        $scope.testingService.test("Saving tree test",  $scope.storageService.getTree().nodes.length, tree.nodes.length);
+    };
+
+    $scope.tests();
 }]);
 app.directive('autoFocus', function($timeout) {
   return function(scope, element, attrs) {
@@ -81,25 +145,3 @@ app.directive('autoFocus', function($timeout) {
       },true);
   };    
 });
-
-/*describe('Application', function () {
-    var scope,
-    controller;
-    beforeEach(function () {
-			angular.mock.module('Application');
-    });
-
-    describe('TreeController', function () {
-        beforeEach(inject(function ($rootScope, $controller) {
-            scope = $rootScope.$new();
-            controller = $controller('TreeController', {
-                '$scope': scope
-            });
-        }));
-        it('sets the name', function () {
-            expect(scope.test).toBe('test');
-        });
-
-    });
-    
-});*/
