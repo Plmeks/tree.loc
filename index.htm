@@ -8,19 +8,11 @@
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-mocks.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
     <script type="text/javascript" src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
-	<!--<script type="text/javascript" src="js/frameworks/jasmine/jasmine.js"></script>-->
-	<!--<script type="text/javascript" src="js/frameworks/jasmine/jasmine-html.js"></script>-->
-	<!--<script type="text/javascript" src="js/frameworks/jasmine/boot.js"></script>-->
-	
 
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<link href="https://code.jquery.com/qunit/qunit-2.0.1.css" rel="stylesheet" type="text/css">
-	<!--<link href="js/frameworks/jasmine/jasmine.css" rel="stylesheet" type="text/css">-->
 	<link href="css/styles.css" rel="stylesheet" type="text/css">
-	
-	
 	
 	<script type="text/javascript" src="js/app.js"></script>
 	<script type="text/javascript" src="js/services.js"></script>
@@ -28,70 +20,66 @@
 	<script type="text/javascript" src="js/testing.js"></script>
 
     <title>TreeView</title>
-	
 </head>
 <body ng-app="Application" ng-controller="TreeController">
-
-<div id="qunit"></div>
-<div id="qunit-fixture"></div>
-<div class="container" style="margin-top: 20px;">
-  <div class="jumbotron bg-primary">
-    <div class="info">
-      <h1>Recursive tree</h1>
-      <p>This is the basic example of TreeView component, written on AngularJS.</p>
-      <p>
-        <a class="btn btn-success btn-lg" href="#" role="button" ng-click="startTree();">Get it started!</a>
-        <a class="btn btn-default btn-lg" 
-          href="#" role="button" 
-          ng-show="isRestorable();" 
-          ng-click="tree = storageService.getTree();">
-          Restore tree
-        </a>
-        <a class="btn btn-default btn-lg" 
-        href="#" role="button" 
-        ng-show="isSaveable()" 
-        ng-click="storageService.saveTree(tree);">
-          Save tree
-        </a>
-      </p>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <div class="container" style="margin-top: 20px;">
+      <div class="jumbotron bg-primary">
+        <div class="info">
+          <h1>Recursive tree</h1>
+          <p>This is the basic example of TreeView component, written on AngularJS.</p>
+          <p>
+            <a class="btn btn-success btn-lg" href="#" role="button" ng-click="startTree();">Get it started!</a>
+            <a class="btn btn-default btn-lg" href="#" role="button" ng-click="startTests();">Execute tests</a>
+            <a class="btn btn-default btn-lg"
+              href="#" role="button"
+              ng-show="isRestorable();"
+              ng-click="tree = storageService.getTree();">
+              Restore tree
+            </a>
+            <a class="btn btn-default btn-lg"
+            href="#" role="button"
+            ng-show="isSaveable()"
+            ng-click="storageService.saveTree(tree);">
+              Save tree
+            </a>
+          </p>
+        </div>
+        <div class="row">
+        <div class="col-md-12">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="data in tree" ng-include="'treeBranch'"></li>
+          </ul>
+        </div>
+      </div>
+      </div>
     </div>
-    <div class="row">
-    <div class="col-md-4">
-      <ul class="list-group">
-        <li class="list-group-item" ng-repeat="data in tree" ng-include="'treeBranch'"></li>
-      </ul>
-    </div>
-  </div>
-  </div>
-</div>
 
-<script type="text/ng-template"  id="treeBranch">
-		<span class="title" ng-show="!isEditing" ng-click='isEditing = !isEditing' >{{data.name}}</span>
-		<input type="text"
-		ng-show="isEditing"
-		auto-focus="isEditing"
-		ng-blur='isEditing = !isEditing'
-		ng-model="data.name" />
+    <script type="text/ng-template"  id="treeBranch">
+        <span class="title" ng-show="!isEditing" ng-click='isEditing = !isEditing' >{{data.name}}</span>
+        <input type="text"
+        ng-show="isEditing"
+        auto-focus="isEditing"
+        ng-blur='isEditing = !isEditing'
+        ng-model="data.name" />
 
+        <span class="glyphicon glyphicon-plus treeControl first"
+          ng-click="add(data)">
+        </span>
 
-
-		<span class="glyphicon glyphicon-plus treeControl first"
-		  ng-click="add(data)">
-		</span>
-
-		<span
-			class="glyphicon glyphicon-trash treeControl"
-		  ng-click="delete(data)">
-		</span>
+        <span
+            class="glyphicon glyphicon-trash treeControl"
+          ng-click="delete(data)" ng-show="!data.root">
+        </span>
 
 
-		<ul class="list-group">
-			<li class="list-group-item"
-			ng-repeat="data in data.nodes"
-			ng-include="'treeBranch'">
-			</li>
-		</ul>
-	</script>
-
+        <ul class="list-group">
+            <li class="list-group-item"
+            ng-repeat="data in data.nodes"
+            ng-include="'treeBranch'">
+            </li>
+        </ul>
+    </script>
 </body>
 </html>

@@ -2,6 +2,7 @@ app.factory('treeModel', function() {
 	var tree = [
 		{
 			name: "Tree",
+			root: true,
 			nodes: []
 		}
 	];

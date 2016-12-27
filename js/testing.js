@@ -1,3 +1,4 @@
+// Testing service with QUnit
 app.service('testingService', function() {
     this.test = function(name, result, expected) {
         QUnit.test(name, function( assert ) {
